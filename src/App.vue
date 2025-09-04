@@ -1,30 +1,58 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="app">
+    <AppHeader />
+    <NavigationBar
+      :machines="machines"
+      :active-tab="activeTab"
+      @tab-change="handleTabChange"
+    />
+    <main class="main-content">
+      <MachineStatusFlow :machines="machines" />
+    </main>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<script>
+import { ref, onMounted, onUnmounted } from "vue";
+import AppHeader from "./components/AppHeader.vue";
+import NavigationBar from "./components/NavigationBar.vue";
+import MachineStatusFlow from "./components/productionLineDetails/MachineStatusFlow.vue";
+import { useMachineData } from "./composables/useMachineData";
+
+export default {
+  name: "App",
+  components: {
+    AppHeader,
+    NavigationBar,
+    MachineStatusFlow,
+  },
+  setup() {
+    const { machines, updateMachineStatus } = useMachineData();
+    const activeTab = ref("attacher");
+
+    const handleTabChange = (tabId) => {
+      activeTab.value = tabId;
+    };
+    let interval;
+    onMounted(() => {
+      interval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * machines.value.length);
+        const statuses = ["running", "warning", "alarm"];
+        const randomStatus =
+          statuses[Math.floor(Math.random() * statuses.length)];
+        updateMachineStatus(machines.value[randomIndex].id, randomStatus);
+      }, 15000);
+    });
+
+    onUnmounted(() => {
+      clearInterval(interval);
+    });
+
+    return {
+      machines,
+      activeTab,
+      handleTabChange,
+    };
+  },
+};
+</script>

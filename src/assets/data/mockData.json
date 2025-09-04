@@ -1,0 +1,30 @@
+[
+  {
+    "id": "scale",
+    "name": "Scale",
+    "status": "running",
+    "icon": "straighten",
+    "description": "Weighs the products"
+  },
+  {
+    "id": "attacher",
+    "name": "Attacher",
+    "status": "alarm",
+    "icon": "attachment",
+    "description": "Attaches bags to the line"
+  },
+  {
+    "id": "packer",
+    "name": "Packer",
+    "status": "running",
+    "icon": "inventory_2",
+    "description": "Packs products into bags"
+  },
+  {
+    "id": "closer",
+    "name": "Closer",
+    "status": "warning",
+    "icon": "grid_view",
+    "description": "Seals the bags"
+  }
+]
